@@ -537,18 +537,16 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
       im.addEventListener('error', () => { if (--left === 0) done(); }, { once: true });
       im.src = im.dataset.src; im.removeAttribute('data-src'); });
   });
-  // Скорость сети (Мбит/с) по уже скачанным картинкам и клипам: байты партии за время от первого запроса до последнего ответа.
+  // Скорость сети (Мбит/с): лучшая скорость скачивания среди последних крупных картинок и сегментов —
+  // файлы качаются параллельно и делят канал, поэтому средняя или медиана занижают скорость.
   const speed = () => {
-    const rs = performance.getEntriesByType('resource').filter(e => /\.(jpg|m4s|mp4)(\?|$)/.test(e.name) && e.transferSize > 20000);
-    if (!rs.length) return 0;
-    const last = rs.slice(-8), t0 = Math.min(...last.map(e => e.requestStart || e.startTime)), t1 = Math.max(...last.map(e => e.responseEnd));
-    return t1 > t0 ? last.reduce((s, e) => s + e.transferSize, 0) * 8 / (t1 - t0) / 1000 : 0;
+    const rs = performance.getEntriesByType('resource').filter(e => /\.(jpg|m4s|mp4)(\?|$)/.test(e.name) && e.transferSize > 100000 && e.responseEnd > e.responseStart)
+      .slice(-8).map(e => e.transferSize * 8 / (e.responseEnd - e.responseStart) / 1000);
+    return rs.length ? Math.max(...rs) : 0;
   };
-  // Уровень, который докачается секунды за 4, пока смотрят кадр (поток уровней: 2K ≈ 10, 1080p ≈ 5, 720p ≈ 2,6, 540p ≈ 1,3 Мбит/с).
-  const hlsLevel = () => {
-    const mbps = speed() || (net && net.downlink) || 0;
-    return !mbps ? '1080' : mbps >= 13 ? '2k' : mbps >= 7 ? '1080' : mbps >= 3.5 ? '720' : '540';
-  };
+  // Качество важнее: всегда 2K, 1080p — только на явно медленной сети. Ниже 1080p не опускаемся:
+  // если клип не успел докачаться, будет обычная смена кадра.
+  const hlsLevel = () => { const mbps = speed(); return mbps && mbps < 5 ? '1080' : '2k'; };
   const loadClip = ([v, src]) => within(15000, done => {
     v.addEventListener('canplaythrough', done, { once: true });
     v.addEventListener('error', done, { once: true });
