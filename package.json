@@ -1,0 +1,10 @@
+{
+  "name": "@demo/auto",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Концепт «Синий час»: статический сайт, публикуется из зеркала YanSite/auto.",
+  "scripts": {
+    "dev": "serve -l 4107 --no-clipboard .",
+    "build": "node ../../../tools/demo/check-static.mjs ."
+  }
+}
