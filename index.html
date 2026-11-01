@@ -18,10 +18,44 @@
 <meta name="theme-color" content="#040B18">
 <link rel="icon" type="image/png" href="icon-48.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="preload" as="image" href="img/s01.jpg" fetchpriority="high">
+<!-- первый кадр: 1080 px для экранов с меньшей плотностью; кадр 9:16 при cover занимает по ширине не меньше 55,8vh -->
+<link rel="preload" as="image" href="img/s01.jpg" imagesrcset="img/s01-1080.jpg 1080w, img/s01.jpg 1536w" imagesizes="max(100vw, 55.8vh)" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="fonts/manrope-cyrillic.woff2" crossorigin>
-<link rel="stylesheet" href="fonts/fonts.css">
 <style>
+/* Шрифты сайта — Manrope (заголовки) и Golos Text (текст), SIL Open Font License, локальные копии:
+   кириллица и латиница. Оба переменные: один файл на набор символов покрывает все начертания. */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/manrope-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/manrope-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(fonts/golos-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(fonts/golos-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+20A0-20C0, U+2000-206F, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 /* метка «Концепт»: на телефоне — в строке шапки справа (ниже начинаются блоки текста), город сдвинут влево */
 concept-card{--cc-font:'Golos Text','Segoe UI',Roboto,Arial,sans-serif;--cc-top:calc(8px + env(safe-area-inset-top,0px));--cc-right:max(12px,env(safe-area-inset-right,0px))}
 @media (max-width:899px){.masthead .city{margin-right:76px}}
@@ -118,11 +152,12 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
 .copy h1,.copy h2{text-shadow:0 1px 2px rgba(4,11,24,.45),0 4px 28px rgba(4,11,24,.55)}
 .copy .amber{color:var(--amber-hi)}
 /* cinema layer */
-.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:var(--bar,0px);background:#000;z-index:4;pointer-events:none}
-.bars::before{top:0} .bars::after{bottom:0}
-.stage.pre{--bar:50.5%}
-.stage.opening{--bar:0px}
-.stage.opening.bars::before,.stage.opening.bars::after{transition:height 1.5s cubic-bezier(.7,0,.2,1) .2s}
+/* шторки двигаются через transform: изменение высоты каждый кадр засчитывалось бы как сдвиг вёрстки (CLS) */
+.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:50.5%;background:#000;z-index:4;pointer-events:none;transform:scaleY(var(--bar-s,0))}
+.bars::before{top:0;transform-origin:top} .bars::after{bottom:0;transform-origin:bottom}
+.stage.pre{--bar-s:1}
+.stage.opening{--bar-s:0}
+.stage.opening.bars::before,.stage.opening.bars::after{transition:transform 1.5s cubic-bezier(.7,0,.2,1) .2s}
 .stage.pre .scene:first-of-type .cam{filter:brightness(.16) saturate(.4)}
 .stage.opening .scene:first-of-type .cam{filter:none;transition:filter 2.8s cubic-bezier(.4,0,.2,1) .9s}
 .stage.pre .glow{opacity:0;animation:none}
@@ -177,7 +212,7 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
 <div class="stage bars pre" id="stage">
 
   <section class="scene scrim" data-fx="zoom" data-amp=".06" style="--pm:50% 50%;--pd:50% 50%;--to:50% 48%" aria-label="Первый экран" data-clip="v/c1.mp4">
-    <img class="ph" src="img/s01.jpg" alt="Автосалон в синий час: светящийся стеклянный фасад, машины на мокром дворе" fetchpriority="high">
+    <img class="ph" src="img/s01.jpg" srcset="img/s01-1080.jpg 1080w, img/s01.jpg 1536w" sizes="max(100vw, 55.8vh)" alt="Автосалон в синий час: светящийся стеклянный фасад, машины на мокром дворе" fetchpriority="high">
     <div class="glow" aria-hidden="true"></div><div class="mist" aria-hidden="true"></div>
     <div class="copy top hero">
       <h1>Свет уже включён.<br><span class="amber">Заходите.</span></h1>
@@ -293,7 +328,7 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
   </section>
 
   <section class="scene scrim" data-fx="none" data-amp="0" style="--pm:50% 50%;--pd:50% 50%" aria-label="Контакты">
-    <img class="ph" src="img/s01.jpg" alt="Автосалон в синий час, общий план" style="filter:brightness(.4)">
+    <img class="ph" src="img/s01.jpg" srcset="img/s01-1080.jpg 1080w, img/s01.jpg 1536w" sizes="max(100vw, 55.8vh)" alt="Автосалон в синий час, общий план" style="filter:brightness(.4)">
     <div class="copy top">
       <div class="eyebrow">Контакты</div>
       <h2>Синий час</h2>
@@ -662,6 +697,8 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
     loadAll();
     if (reduce.matches) { stage.classList.remove('pre'); intro = false; settle(0); return; }
     stage.classList.add('opening'); stage.classList.remove('pre');
+    // заголовок выезжает, пока раскрываются шторки, — не ждёт «включения света»: это самый крупный текст первого экрана (по нему считается LCP)
+    setTimeout(() => scenes[0].classList.add('active'), 200);
     setTimeout(() => { intro = false; settle(0); }, 2100);
     setTimeout(() => stage.classList.remove('opening'), 4200);
   };
