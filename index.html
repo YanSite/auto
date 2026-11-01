@@ -702,8 +702,11 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
     setTimeout(() => { intro = false; settle(0); }, 2100);
     setTimeout(() => stage.classList.remove('opening'), 4200);
   };
-  (first.decode ? first.decode() : Promise.resolve()).then(begin, begin);
-  setTimeout(begin, 2500);
+  // старт — как только фото загружено, но не позже 0,4 с: первые ~0,9 с кадр затемнён до 16%, и на медленной сети фото успевает
+  // проявиться до «включения света»; заголовок (по нему считается LCP) не ждёт фото. decode() не ждём: в части окружений
+  // он не завершается до первой отрисовки.
+  if (first.complete && first.naturalWidth) begin(); else { first.addEventListener('load', begin, { once: true }); first.addEventListener('error', begin, { once: true }); }
+  setTimeout(begin, 400);
 })();
 </script>
 <script src="concept-card.js?v=7d9bf3a7" defer data-category="дилерская компания" data-tone="dark" data-position="tr" data-order="[data-book]" data-contact='[data-note*="чат"]' data-plain='[data-note]:not([data-note*="чат"])'></script>
