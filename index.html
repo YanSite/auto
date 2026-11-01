@@ -555,9 +555,9 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
   function prepClip(){}
   function playClip(from, to){
     const v = clips[scenes[from].dataset.clip];
-    // играем, только если скачана хотя бы половина клипа — вторая успевает докачаться, пока идёт первая; иначе — обычный переход без рывков
+    // играем, только если клип скачан целиком: клипы в 2K (~10 Мбит/с), и на мобильной сети недокачанный хвост подвисает; иначе — обычный переход без рывков
     const got = v && v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0;
-    if (!v || v.readyState < 3 || !v.duration || got < v.duration * .5) { skipClip = true; go(to); skipClip = false; return; }
+    if (!v || v.readyState < 4 || !v.duration || got < v.duration - .2) { skipClip = true; go(to); skipClip = false; return; }
     busy = true; v._playing = true; if (raf) cancelAnimationFrame(raf);
     const A = scenes[from]; A.classList.remove('active');
     let done = false, started = false, lastT = -1, lastMove = performance.now();
