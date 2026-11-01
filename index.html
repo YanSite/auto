@@ -566,6 +566,13 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
     for (const c of clipList.slice(1)) await loadClip(c);
   }
   function prepClip(){}
+  // Картинка кадра загружена и готова к показу (с запасом по времени, чтобы не держать переход вечно).
+  function imgReady(s, ms){
+    const im = s.querySelector('img.ph'); if (!im) return Promise.resolve();
+    if (im.dataset.src) { im.src = im.dataset.src; im.removeAttribute('data-src'); }
+    const loaded = im.complete && im.naturalWidth ? Promise.resolve() : new Promise(r => { im.addEventListener('load', r, { once: true }); im.addEventListener('error', r, { once: true }); });
+    return Promise.race([loaded.then(() => im.decode ? im.decode().catch(() => {}) : 0), new Promise(r => setTimeout(r, ms))]);
+  }
   function playClip(from, to){
     const v = clips[scenes[from].dataset.clip];
     // играем, только если клип скачан целиком: клипы в 2K (~10 Мбит/с), и на мобильной сети недокачанный хвост подвисает; иначе — обычный переход без рывков
@@ -573,18 +580,32 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
     if (!v || v.readyState < 4 || !v.duration || got < v.duration - .2) { skipClip = true; go(to); skipClip = false; return; }
     busy = true; v._playing = true; if (raf) cancelAnimationFrame(raf);
     const A = scenes[from]; A.classList.remove('active');
-    let done = false, started = false, lastT = -1, lastMove = performance.now();
-    const cleanup = () => { clipSkip = null; v.onended = null; v.ontimeupdate = null; v.onerror = null; v.onstalled = null; clearInterval(dog); };
+    // Бесшовный стык: картинка следующего кадра грузится, пока идёт проезд; видео держит последний кадр, пока она не готова, и только потом растворяется в неё.
+    const next = imgReady(scenes[to], 4000);
+    let done = false, started = false, lastT = -1, lastMove = performance.now(), loop = 0;
+    const cleanup = () => { clipSkip = null; v.onended = null; v.onerror = null; clearInterval(dog); cancelAnimationFrame(loop); };
     const finish = ok => {
       if (done) return; done = true; v._playing = false; cleanup();
       if (!ok) { v.pause(); v.classList.remove('on'); busy = false; skipClip = true; go(to); skipClip = false; return; }
-      settle(to); requestAnimationFrame(() => v.classList.remove('on'));
-      setTimeout(() => { v.pause(); try { v.currentTime = 0; } catch(e){} }, 600);
+      v.pause();
+      next.then(() => {
+        settle(to);
+        // кадр под видео уже нарисован — теперь видео плавно уходит
+        requestAnimationFrame(() => requestAnimationFrame(() => v.classList.remove('on')));
+        setTimeout(() => { try { v.currentTime = 0; } catch(e){} }, 700);
+      });
     };
-    v.ontimeupdate = () => {
-      if (!started && v.currentTime > 0.04) { started = true; v.classList.add('on'); scenes.forEach((s,k) => { if (k !== from) hide(s); }); }
-      if (v.duration && v.currentTime >= v.duration - .15) finish(true);
+    // Видео появляется, только когда первый кадр действительно на экране — иначе на телефоне мелькает чёрная подложка.
+    const reveal = () => { if (started || done) return; started = true; v.classList.add('on'); setTimeout(() => { if (!done) scenes.forEach((s,k) => { if (k !== from) hide(s); }); }, 300); };
+    if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(() => requestAnimationFrame(reveal));
+    // Конец ловим покадрово и останавливаемся за полкадра-кадр до конца: у встроенного HLS после конца бывает пустой кадр.
+    const watch = () => {
+      if (done) return;
+      if (!v.requestVideoFrameCallback && !started && v.currentTime > 0.04) reveal();
+      if (v.duration && v.currentTime >= v.duration - .09) return finish(true);
+      loop = requestAnimationFrame(watch);
     };
+    loop = requestAnimationFrame(watch);
     v.onended = () => finish(true);
     v.onerror = () => finish(started);
     // watchdog: if playback does not start in 1.2 s or freezes for 1.2 s, move on
@@ -597,6 +618,7 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
     try { v.currentTime = 0; } catch(e){}
     const p = v.play(); if (p && p.catch) p.catch(() => finish(false));
   }
+
 
   const next = () => go(cur + 1), prev = () => go(cur - 1);
 
