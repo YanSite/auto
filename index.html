@@ -699,8 +699,10 @@ button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
     stage.classList.add('opening'); stage.classList.remove('pre');
     // заголовок выезжает, пока раскрываются шторки, — не ждёт «включения света»: это самый крупный текст первого экрана (по нему считается LCP)
     setTimeout(() => scenes[0].classList.add('active'), 200);
-    // остальные кадры и проезды — когда заголовок уже на экране: до этого канал и процессор только у первого экрана
-    setTimeout(loadAll, 1100);
+    // остальные кадры и проезды — когда заголовок выехал целиком (LCP засчитывается по окончании выезда): до этого канал только у первого экрана
+    const lines = scenes[0].querySelectorAll('.ln .in'), lastLine = lines[lines.length - 1];
+    if (lastLine) lastLine.addEventListener('transitionend', loadAll, { once: true });
+    setTimeout(loadAll, 2500);
     setTimeout(() => { intro = false; settle(0); }, 2100);
     setTimeout(() => stage.classList.remove('opening'), 4200);
   };
