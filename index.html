@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Синий час — Концепт сайта автосалона · Есть что показать</title>
+<meta name="description" content="Концепт сайта автосалона. Прогулка по салону в синий час: от мокрого двора до места водителя. Сделала команда «Есть что показать».">
+<meta name="color-scheme" content="only dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://yansite.github.io/auto/">
+<meta property="og:title" content="Синий час — Концепт сайта автосалона">
+<meta property="og:description" content="Концепт сайта автосалона. Прогулка по салону в синий час: от мокрого двора до места водителя. Сделала команда «Есть что показать».">
+<meta property="og:image" content="https://yansite.github.io/auto/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#040B18">
+<link rel="icon" type="image/png" href="icon-48.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<!-- первый кадр: 1080 px для экранов с меньшей плотностью; кадр 9:16 при cover занимает по ширине не меньше 55,8vh -->
+<link rel="preload" as="image" href="img/s01.jpg" imagesrcset="img/s01-1080.jpg 1080w, img/s01.jpg 1536w" imagesizes="max(100vw, 55.8vh)" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="fonts/manrope-cyrillic.woff2" crossorigin>
+<style>
+/* Шрифты сайта — Manrope (заголовки) и Golos Text (текст), SIL Open Font License, локальные копии:
+   кириллица и латиница. Оба переменные: один файл на набор символов покрывает все начертания. */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/manrope-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/manrope-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(fonts/golos-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(fonts/golos-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+20A0-20C0, U+2000-206F, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* метка «Концепт»: на телефоне — в строке шапки справа (ниже начинаются блоки текста), город сдвинут влево */
+concept-card{--cc-font:'Golos Text','Segoe UI',Roboto,Arial,sans-serif;--cc-top:calc(8px + env(safe-area-inset-top,0px));--cc-right:max(12px,env(safe-area-inset-right,0px))}
+@media (max-width:899px){.masthead .city{margin-right:76px}}
+@media (min-width:900px){concept-card{--cc-top:calc(72px + env(safe-area-inset-top,0px));--cc-right:max(66px,env(safe-area-inset-right,0px))}}
+/* Layout: one full-screen stage; one swipe = one shot. Camera transitions play between 14 film frames. Single deliberate dark look («Синий час»). */
+:root{
+  --night-0:#040B18; --night-1:#0B1626; --line:#2C3D57;
+  --amber:#F2B66B; --amber-hi:#FFD39C; --frost:#EEF1F5; --mist:#AFC0D6; --soft:#C9D2DE;
+  --panel:rgba(4,11,24,.80);
+  --display:'Manrope', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Golos Text', 'Segoe UI', Roboto, Arial, sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+html{background:var(--night-0)}
+body{background:var(--night-0);color:var(--frost);font-family:var(--body);margin:0;overflow:hidden;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+.stage{position:relative;height:100%;overflow:hidden;background:var(--night-0);touch-action:none;user-select:none;-webkit-user-select:none}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden}
+.scene.on{visibility:visible}
+.cam{position:absolute;inset:0;transform-origin:var(--to,50% 55%);will-change:transform}
+.scene img.ph,.half img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:var(--pm,50% 50%)}
+.half{position:absolute;inset:0;overflow:hidden;display:none;will-change:transform}
+.half.l{clip-path:inset(0 50% 0 0)} .half.r{clip-path:inset(0 0 0 50%)}
+.scene.splitting .half{display:block} .scene.splitting .cam > img.ph{visibility:hidden}
+.glow{position:absolute;inset:0;background:radial-gradient(60% 22% at 50% 50%,rgba(242,182,107,.55),transparent 70%);mix-blend-mode:soft-light;animation:breathe 7s ease-in-out infinite;pointer-events:none}
+@keyframes breathe{0%,100%{opacity:.25}50%{opacity:.75}}
+.mist{position:absolute;left:-30%;right:-30%;bottom:8%;height:28%;background:radial-gradient(50% 50% at 50% 60%,rgba(200,215,235,.16),transparent 70%);filter:blur(18px);animation:drift 22s ease-in-out infinite alternate;pointer-events:none}
+@keyframes drift{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
+.flash{position:absolute;inset:0;z-index:3;background:radial-gradient(40% 30% at 50% 60%,#FFF6E6,rgba(255,226,170,.85) 40%,rgba(242,182,107,0) 85%);opacity:0;pointer-events:none;mix-blend-mode:screen}
+
+/* copy */
+.copy{position:absolute;z-index:2;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:10px;opacity:0;translate:0 18px;transition:opacity .3s ease,translate .3s ease;pointer-events:none}
+.scene.active .copy{opacity:1;translate:0 0;transition:opacity .7s ease .25s,translate .7s ease .25s;pointer-events:auto}
+.copy.top{top:calc(76px + env(safe-area-inset-top,0px))}
+.copy.bottom{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+.panel{background:var(--panel);padding:20px 22px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber)}
+h1,h2{margin:0;font-family:var(--display);font-weight:300;letter-spacing:-.02em;text-wrap:balance}
+h1{font-size:clamp(40px,11vw,92px);line-height:1.02}
+h2{font-size:clamp(28px,7.6vw,64px);line-height:1.06}
+.big{font-size:clamp(40px,11vw,104px);line-height:1}
+.amber{color:var(--amber)}
+p{margin:0;font-size:15px;line-height:1.5;color:var(--soft);max-width:52ch}
+.who{font-size:15px;color:var(--frost)} .who span{color:var(--mist)}
+.link{align-self:flex-start;min-height:44px;display:inline-flex;align-items:center;gap:12px;color:var(--amber);text-decoration:none;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border:0;background:none;padding:0;cursor:pointer}
+.link:hover{color:var(--amber-hi)}
+button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+/* car card */
+.card{display:grid;gap:12px}
+.card .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.model{font-family:var(--display);font-weight:300;font-size:clamp(28px,7.6vw,72px);line-height:1;letter-spacing:-.02em}
+.price{font-size:clamp(15px,1.6vw,22px);white-space:nowrap;font-variant-numeric:tabular-nums}
+.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;font-size:12px;color:var(--mist)}
+.specs b{display:block;font-weight:400;font-size:15px;color:var(--frost);font-variant-numeric:tabular-nums}
+.detail{width:64px;height:64px;object-fit:cover;box-shadow:0 0 0 1px rgba(238,241,245,.5);max-width:100%;flex:none}
+.foot{display:flex;align-items:center;gap:16px}
+/* lounge list */
+.list{display:flex;flex-direction:column}
+.list button{min-height:52px;display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;border-top:1px solid var(--line);background:none;color:var(--frost);font:inherit;font-size:16px;padding:0;cursor:pointer;text-align:left}
+.list button:last-child{border-bottom:1px solid var(--line)}
+.list button span:last-child{font-size:13px;color:var(--mist);text-align:right}
+.list button:hover span:first-child{color:var(--amber)}
+.cta{min-height:56px;display:flex;align-items:center;justify-content:center;padding:0 32px;background:var(--amber);color:var(--night-0);border-radius:2px;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.02em;border:0;cursor:pointer}
+.cta:hover{background:var(--amber-hi)}
+.facts{display:grid;grid-template-columns:90px 1fr;gap:12px;font-size:15px;line-height:1.4;margin:0}
+.facts dt{color:var(--mist)} .facts dd{margin:0;font-variant-numeric:tabular-nums}
+.demo{font-size:12px;color:var(--mist)}
+.cta-note{text-align:center;font-size:12px;letter-spacing:.08em;color:#C9D6E6;max-width:none}
+
+/* chrome */
+.masthead{position:absolute;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;align-items:baseline;padding:calc(22px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) 0 max(22px,env(safe-area-inset-left,0px));pointer-events:none}
+.brand{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase}
+.city{font-size:13px;color:#C9D6E6}
+.hint{position:absolute;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:10px;min-height:44px;color:var(--amber);font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase;background:none;border:0;cursor:pointer;transition:opacity .4s}
+.hint i{display:block;width:1.4px;height:34px;background:var(--amber);transform-origin:top;animation:pull 2.4s ease-in-out infinite}
+@keyframes pull{0%{transform:scaleY(.2)}50%{transform:scaleY(1)}100%{transform:scaleY(.2);opacity:.4}}
+.hint[hidden]{display:none!important}
+.path{position:absolute;z-index:5;left:max(22px,env(safe-area-inset-left,0px));right:max(22px,env(safe-area-inset-right,0px));bottom:calc(26px + env(safe-area-inset-bottom,0px));transition:opacity .4s}
+.path .track{height:2px;background:rgba(238,241,245,.22)}
+.path .fill{height:2px;width:0;background:var(--amber);transition:width .9s cubic-bezier(.65,0,.35,1)}
+.chaps{position:relative;height:28px;display:none}
+.chap{position:absolute;top:6px;transform:translateX(-50%);background:none;border:0;color:var(--mist);font:inherit;font-size:11px;letter-spacing:.08em;cursor:pointer;padding:4px 6px;min-height:28px}
+.chap.on{color:var(--frost)}
+.nav{position:absolute;z-index:6;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(44px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:12px;letter-spacing:.12em;color:var(--mist);font-variant-numeric:tabular-nums}
+.nav button{width:44px;height:44px;display:grid;place-items:center;background:rgba(4,11,24,.55);border:1px solid var(--line);color:var(--frost);cursor:pointer;border-radius:2px}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav button:not(:disabled):hover{border-color:var(--amber);color:var(--amber)}
+.toast{position:absolute;z-index:9;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--night-1);border:1px solid var(--line);color:var(--frost);padding:12px 16px;font-size:13px;max-width:calc(100% - 32px);opacity:0;transition:opacity .3s;pointer-events:none}
+
+/* legibility: a soft shade behind headings that sit directly on the photo */
+.scene:has(> .copy.top:not(.panel))::before{content:"";position:absolute;left:0;right:0;top:0;height:52%;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(4,11,24,.82) 0%,rgba(4,11,24,.55) 45%,rgba(4,11,24,0) 100%)}
+.scene:has(> .copy.bottom:not(.panel))::before{content:"";position:absolute;left:0;right:0;bottom:0;height:48%;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(4,11,24,.85) 0%,rgba(4,11,24,.5) 50%,rgba(4,11,24,0) 100%)}
+.scene:has(> .copy.top:not(.panel)):has(> .copy.bottom:not(.panel))::before{top:0;bottom:0;height:auto;background:linear-gradient(180deg,rgba(4,11,24,.82) 0%,rgba(4,11,24,.4) 38%,rgba(4,11,24,.4) 62%,rgba(4,11,24,.85) 100%)}
+.copy h1,.copy h2{text-shadow:0 1px 2px rgba(4,11,24,.45),0 4px 28px rgba(4,11,24,.55)}
+.copy .amber{color:var(--amber-hi)}
+/* cinema layer */
+/* шторки двигаются через transform: изменение высоты каждый кадр засчитывалось бы как сдвиг вёрстки (CLS) */
+.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:50.5%;background:#000;z-index:4;pointer-events:none;transform:scaleY(var(--bar-s,0))}
+.bars::before{top:0;transform-origin:top} .bars::after{bottom:0;transform-origin:bottom}
+.stage.pre{--bar-s:1}
+.stage.opening{--bar-s:0}
+.stage.opening.bars::before,.stage.opening.bars::after{transition:transform 1.5s cubic-bezier(.7,0,.2,1) .2s}
+.stage.pre .scene:first-of-type .cam{filter:brightness(.16) saturate(.4)}
+.stage.opening .scene:first-of-type .cam{filter:none;transition:filter 2.8s cubic-bezier(.4,0,.2,1) .9s}
+.stage.pre .glow{opacity:0;animation:none}
+.grain{position:absolute;inset:-50%;z-index:4;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain .9s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.clip{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;z-index:2;opacity:0;pointer-events:none;transition:opacity .45s ease}
+.clip.on{opacity:1;transition:opacity .25s ease}
+#rain{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .9s}
+.streak{position:absolute;left:-10%;right:-10%;top:58%;height:3px;z-index:3;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,rgba(160,200,255,.0) 10%,rgba(200,225,255,.9) 45%,#fff 50%,rgba(200,225,255,.9) 55%,rgba(160,200,255,0) 90%,transparent);filter:blur(1.2px);transform:scaleX(.2)}
+.sweep{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:linear-gradient(105deg,transparent 35%,rgba(255,240,215,.0) 40%,rgba(255,240,215,.75) 50%,rgba(255,240,215,0) 60%,transparent 65%);background-size:300% 100%;background-position:120% 0;opacity:0}
+.scene.active .sweep{animation:sweep 2.2s cubic-bezier(.5,0,.3,1) .35s 1 both}
+@keyframes sweep{0%{background-position:120% 0;opacity:1}100%{background-position:-20% 0;opacity:1}}
+.ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.ln .in{display:block;transform:translateY(110%);transition:transform .35s ease}
+.scene.active .ln .in{transform:none;transition:transform 1s cubic-bezier(.16,.84,.24,1) calc(.3s + var(--d,0s))}
+.masthead{transition:opacity .9s ease}
+.stage.pre .masthead,.stage.pre .hint{opacity:0!important}
+.stage.opening .masthead,.stage.opening .hint{transition:opacity .9s ease 2s}
+
+@media (max-width:899px){ .nav{display:none} .path{opacity:1} }
+@media (min-width:900px){
+  .scene img.ph,.half img{object-position:var(--pd,50% 50%)}
+  .scene.scrim::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(4,11,24,.88) 0%,rgba(4,11,24,.55) 38%,rgba(4,11,24,0) 62%);pointer-events:none}
+  .copy,.copy.top,.copy.bottom{left:max(72px,env(safe-area-inset-left,0px));right:auto;top:50%;bottom:auto;width:min(620px,44vw);transform:translateY(-50%);gap:20px}
+  .copy.hero{top:44%}
+  .copy.finale{top:36%}
+  .copy.cta-block{top:calc(36% + 150px);transform:none;align-items:flex-start;gap:14px}
+  .copy.cta-block .cta-note{text-align:left}
+  .panel{background:none;padding:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+  p{font-size:18px} .who{font-size:18px}
+  .eyebrow{font-size:12px}
+  .specs{gap:24px;font-size:14px} .specs b{font-size:22px}
+  .detail{width:200px;height:200px}
+  .foot{align-items:flex-end;gap:24px}
+  .card .row{flex-direction:column;align-items:flex-start;gap:16px}
+  .list button{min-height:72px;font-family:var(--display);font-weight:300;font-size:28px}
+  .list button span:last-child{font-family:var(--body);font-size:15px}
+  .facts{grid-template-columns:140px 1fr;font-size:19px}
+  .masthead{padding-left:max(72px,env(safe-area-inset-left,0px));padding-right:max(72px,env(safe-area-inset-right,0px));padding-top:calc(36px + env(safe-area-inset-top,0px))}
+  .brand{font-size:13px} .city{font-size:15px}
+  .hint{left:max(72px,env(safe-area-inset-left,0px));transform:none;flex-direction:row-reverse;bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  .hint i{width:44px;height:1.4px;transform-origin:left;animation-name:pullx}
+  @keyframes pullx{0%{transform:scaleX(.2)}50%{transform:scaleX(1)}100%{transform:scaleX(.2);opacity:.4}}
+  .path{left:max(72px,env(safe-area-inset-left,0px));right:max(200px,env(safe-area-inset-right,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+  .chaps{display:block}
+  .nav{right:max(72px,env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){ .glow,.mist,.hint i,.grain,.scene.active .sweep{animation:none} #rain{display:none} .ln .in,.scene.active .ln .in{transform:none;transition:none} }
+
+/* Телефон невысокий (375×667 и похожие): панель машины и менеджера наверху и компактнее —
+   иначе она закрывает половину машины и почти всего менеджера. */
+@media (max-width:899px) and (max-height:740px){
+  .copy.bottom.panel.card,.scene[aria-label="Стойка приёма"] .copy.bottom.panel{top:calc(62px + env(safe-area-inset-top,0px));bottom:auto}
+  .panel{padding:14px 16px}
+  .card{gap:8px}
+  .model{font-size:26px}
+  .specs{font-size:11px;gap:6px}
+  .specs b{font-size:14px}
+  .detail{width:44px;height:44px}
+  .scene[aria-label="Стойка приёма"] h2{font-size:24px}
+}
+/* Десктоп: карточка машины и колонка лаунжа на подложке — текст и плитка детали не лежат на кузове. */
+@media (min-width:900px){
+  .copy.panel.card,.scene[aria-label="Лаунж"] .copy.panel{background:rgba(4,11,24,.78);padding:30px 34px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);width:min(520px,38vw)}
+  .copy.panel.card .detail{width:120px;height:120px}
+  /* Карточка машины компактная и в верхнем левом углу: машина — главное в кадре, карточка на неё не ложится. */
+  .copy.panel.card{top:84px;transform:none;width:280px;padding:16px 20px;gap:10px}
+  .copy.panel.card .model{font-size:34px}
+  .copy.panel.card .price{font-size:16px}
+  .copy.panel.card .row{gap:8px}
+  .copy.panel.card .specs{gap:12px;font-size:12px}
+  .copy.panel.card .specs b{font-size:17px}
+  .copy.panel.card .detail{width:44px;height:44px}
+  .copy.panel.card .foot{align-items:center;gap:14px}
+  .path{right:max(320px,env(safe-area-inset-right,0px))}
+}
+
+/* Первый кадр на медленной сети: пока фото грузится, под ним крошечная размытая копия того же
+   кадра (встроена в страницу) — вместо чёрного экрана сразу виден салон. */
+.scene:first-of-type .cam::before{content:"";position:absolute;inset:-6%;background:url("data:image/jpeg;base64,/9j/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAArABgDASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAAMEBQIG/8QAJBAAAgICAQMEAwAAAAAAAAAAAQIAAwQREiExQQUUUZEicYH/xAAYAQADAQEAAAAAAAAAAAAAAAABAgUEAP/EABkRAQADAQEAAAAAAAAAAAAAAAEAAhEDEv/aAAwDAQACEQMRAD8AwKcYt4lPtOnaaWNjDiI21BWu9fQlfSS/MwLsYr4hLssPxPBS3yRCI2jnOLwWxsjJRshQmurBidN/AZffThKdJTWycuQfk3b479p5uh6GyFLryBPUTSbOpsRlA0hcrriB+PzJHatm+krcUK4xPqNmPXkH2qLYx68a2Ol+9wkeTkCh2qxbHSpSSo0Ov7hNPNSoEz9AbMy0uK+Y33B13kIM63F2HI6y4nzCTmE7Ycn/2Q==") 50% 50%/cover;filter:blur(14px)}
+</style>
+</head>
+<body>
+<div class="stage bars pre" id="stage">
+
+  <section class="scene scrim" data-fx="zoom" data-amp=".06" style="--pm:50% 50%;--pd:50% 50%;--to:50% 48%" aria-label="Первый экран" data-clip="v/c1.mp4">
+    <img class="ph" src="img/s01.jpg" srcset="img/s01-1080.jpg 1080w, img/s01.jpg 1536w" sizes="max(100vw, 55.8vh)" alt="Автосалон в синий час: светящийся стеклянный фасад, машины на мокром дворе" fetchpriority="high">
+    <div class="glow" aria-hidden="true"></div><div class="mist" aria-hidden="true"></div>
+    <div class="copy top hero">
+      <h1>Свет уже включён.<br><span class="amber">Заходите.</span></h1>
+    </div>
+  </section>
+
+
+  <section class="scene scrim" data-fx="doors" data-amp=".05" style="--pm:50% 50%;--pd:50% 45%;--to:50% 45%" aria-label="Вход" data-clip="v/c2.mp4">
+    <img class="ph" data-src="img/s03.jpg" alt="Стеклянные двери раздвигаются, тёплый свет выходит на крыльцо">
+    <div class="copy bottom panel">
+      <div class="eyebrow">Вход</div>
+      <h2>Вас уже ждут.</h2>
+      <p>Двери открываются сами, кофе приносят, пока вы снимаете пальто. Парковка для гостей — прямо у входа.</p>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="zoom" data-amp=".05" style="--pm:70% 50%;--pd:50% 50%;--to:70% 50%" aria-label="Стойка приёма">
+    <img class="ph" data-src="img/s04b.jpg" alt="Стойка приёма, менеджер встречает гостя">
+    <div class="copy bottom panel">
+      <div class="eyebrow">Ваш менеджер</div>
+      <h2>Один человек — от первого вопроса до ключей.</h2>
+      <div class="who">Анна <span>· персональный менеджер</span></div>
+      <button class="link" type="button" data-note="Здесь откроется чат с Анной" data-cc-why="Здесь гость написал бы менеджеру.">Написать менеджеру</button>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="slide" data-amp=".04" style="--pm:50% 50%;--pd:50% 58%;--to:50% 60%" aria-label="Остановка 1 из 4">
+    <img class="ph" data-src="img/s05a.jpg" fetchpriority="low" alt="Графитовый седан Vela Aria в зале">
+    <div class="copy bottom panel card">
+      <div class="eyebrow">Остановка 1 из 4 · бизнес-седан</div>
+      <div class="row"><div class="model">Vela Aria</div><div class="price">от 6 490 000 ₽</div></div>
+      <div class="specs"><div><b>380 л.с.</b>мощность</div><div><b>4,9 с</b>0–100 км/ч</div><div><b>полный</b>привод</div></div>
+      <div class="foot"><img class="detail" data-src="img/s05a_d.jpg" fetchpriority="low" alt="Деталь: световая полоса и колесо"><button class="link" type="button" data-book="Vela Aria" data-cc-why="Здесь гость записался бы на тест-драйв.">Тест-драйв этой машины</button></div>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="slide" data-amp=".04" style="--pm:50% 50%;--pd:50% 58%;--to:50% 60%" aria-label="Остановка 2 из 4">
+    <img class="ph" data-src="img/s05b.jpg" fetchpriority="low" alt="Тёмно-синий кроссовер Vela Terra в зале">
+    <div class="copy bottom panel card">
+      <div class="eyebrow">Остановка 2 из 4 · кроссовер</div>
+      <div class="row"><div class="model">Vela Terra</div><div class="price">от 4 890 000 ₽</div></div>
+      <div class="specs"><div><b>299 л.с.</b>мощность</div><div><b>205 мм</b>клиренс</div><div><b>полный</b>привод</div></div>
+      <div class="foot"><img class="detail" data-src="img/s05b_d.jpg" fetchpriority="low" alt="Деталь: световая полоса и колесо"><button class="link" type="button" data-book="Vela Terra" data-cc-why="Здесь гость записался бы на тест-драйв.">Тест-драйв этой машины</button></div>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="slide" data-amp=".05" style="--pm:50% 50%;--pd:50% 60%;--to:50% 62%" aria-label="Остановка 3 из 4">
+    <img class="ph" data-src="img/s05c.jpg" fetchpriority="low" alt="Белый четырёхдверный Vela Lumen GT на подиуме в центре зала">
+    <div class="copy bottom panel card">
+      <div class="eyebrow">Остановка 3 из 4 · звезда зала</div>
+      <div class="row"><div class="model">Vela Lumen GT</div><div class="price">от 9 900 000 ₽</div></div>
+      <div class="specs"><div><b>612 л.с.</b>мощность</div><div><b>3,4 с</b>0–100 км/ч</div><div><b>280 км/ч</b>макс. скорость</div></div>
+      <div class="foot"><img class="detail" data-src="img/s05c_d.jpg" fetchpriority="low" alt="Деталь: световая полоса и колесо"><button class="link" type="button" data-book="Vela Lumen GT" data-cc-why="Здесь гость записался бы на тест-драйв.">Тест-драйв этой машины</button></div>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="zoom" data-amp=".04" style="--pm:35% 50%;--pd:50% 52%;--to:40% 55%" aria-label="Остановка 4 из 4">
+    <img class="ph" data-src="img/s05d.jpg" fetchpriority="low" alt="Большой SUV Vela Grand цвета шампань у стеклянного фасада">
+    <div class="copy bottom panel card">
+      <div class="eyebrow">Остановка 4 из 4 · семейный SUV</div>
+      <div class="row"><div class="model">Vela Grand</div><div class="price">от 8 450 000 ₽</div></div>
+      <div class="specs"><div><b>7</b>мест</div><div><b>680 л</b>багажник</div><div><b>полный</b>привод</div></div>
+      <div class="foot"><img class="detail" data-src="img/s05d_d.jpg" fetchpriority="low" alt="Деталь: световая полоса"><button class="link" type="button" data-book="Vela Grand" data-cc-why="Здесь гость записался бы на тест-драйв.">Тест-драйв этой машины</button></div>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="rise" data-amp=".05" style="--pm:40% 50%;--pd:50% 45%;--to:45% 45%" aria-label="Сервис">
+    <img class="ph" data-src="img/s06b.jpg" fetchpriority="low" alt="Сервисная зона за стеклом: машина на подъёмнике, мастер за работой">
+    <div class="copy bottom panel">
+      <div class="eyebrow">Сервис</div>
+      <h2>Сервис за стеклом. Всё на виду.</h2>
+      <p>ТО, шиномонтаж и детейлинг в одном здании. Наблюдайте за работой через стекло или получайте фото после каждого этапа.</p>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="gate" data-amp=".04" style="--pm:50% 50%;--pd:50% 55%;--to:50% 60%" aria-label="Лаунж">
+    <img class="ph" data-src="img/s07.jpg" fetchpriority="low" alt="Лаунж на антресоли: кресла, кофе, вид вниз на зал">
+    <div class="copy top panel">
+      <div class="eyebrow">Лаунж</div>
+      <h2>Обсудим спокойно.</h2>
+      <div class="list">
+        <button type="button" data-note="Здесь откроется расчёт кредита" data-cc-why="Здесь гость рассчитал бы кредит."><span>Кредит</span><span>расчёт онлайн</span></button>
+        <button type="button" data-note="Здесь откроется оценка вашей машины" data-cc-why="Здесь гость записался бы на оценку своей машины."><span>Трейд-ин</span><span>оценка на месте</span></button>
+        <button type="button" data-note="Здесь откроются варианты страховки" data-cc-why="Здесь гость подобрал бы страховку."><span>Страховка</span><span>оформление в салоне</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="flash" data-amp=".08" style="--pm:60% 50%;--pd:50% 55%;--to:52% 62%" aria-label="Выезд" data-clip="v/c3.mp4">
+    <img class="ph" data-src="img/s08.jpg" fetchpriority="low" alt="Ворота поднялись, белый Vela Lumen GT выезжает навстречу с включёнными фарами">
+    <div class="mist" aria-hidden="true"></div>
+    <div class="copy top">
+      <h2>Ваша машина<br>уже выезжает.</h2>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="wipe" data-amp=".05" style="--pm:55% 50%;--pd:50% 50%;--to:55% 55%" aria-label="Дверь открыта">
+    <img class="ph" data-src="img/s09a.jpg" fetchpriority="low" alt="Водительская дверь открыта, виден салон: кожа, мягкая подсветка">
+    <div class="copy bottom">
+      <h2 class="big">Садитесь.</h2>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="fade" data-amp=".04" style="--pm:50% 50%;--pd:50% 62%;--to:50% 40%" aria-label="Финал">
+    <img class="ph" data-src="img/s09b.jpg" fetchpriority="low" alt="Вид с места водителя: руль, панель, сквозь стекло — двор и светящийся салон">
+    <div class="copy top finale">
+      <h2>Остаётся<br><span class="amber">завести.</span></h2>
+    </div>
+    <div class="copy bottom cta-block">
+      <button class="cta" type="button" data-book="" data-cc-why="Здесь гость записался бы на тест-драйв.">Записаться на тест-драйв</button>
+      <p class="cta-note">Концепт</p>
+    </div>
+  </section>
+
+  <section class="scene scrim" data-fx="none" data-amp="0" style="--pm:50% 50%;--pd:50% 50%" aria-label="Контакты">
+    <img class="ph" src="img/s01.jpg" srcset="img/s01-1080.jpg 1080w, img/s01.jpg 1536w" sizes="max(100vw, 55.8vh)" alt="Автосалон в синий час, общий план" style="filter:brightness(.4)">
+    <div class="copy top">
+      <div class="eyebrow">Контакты</div>
+      <h2>Синий час</h2>
+      <dl class="facts">
+        <dt>Город</dt><dd>Москва</dd>
+        <dt>Часы</dt><dd>ежедневно, 9:00–21:00</dd>
+      </dl>
+      <button class="link" type="button" data-note="Здесь откроется маршрут на карте" data-cc-why="Здесь гость построил бы маршрут.">Построить маршрут</button>
+      <div class="demo">Марка Vela и модели вымышлены. Сходство с реальными автомобилями случайно.</div>
+    </div>
+  </section>
+
+  <div class="flash" id="flash" aria-hidden="true"></div>
+  <div class="streak" id="streak" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <div class="brand">Синий час</div>
+    <div class="city">Москва</div>
+  </header>
+
+  <button class="hint" id="hint" type="button"><span>Идём внутрь</span><i aria-hidden="true"></i></button>
+
+  <div class="path" id="path" aria-hidden="true">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="chaps" id="chaps"></div>
+  </div>
+
+  <div class="nav">
+    <span id="count">01 / 13</span>
+    <button type="button" id="prev" aria-label="Предыдущий кадр"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 10l5-5 5 5"/></svg></button>
+    <button type="button" id="next" aria-label="Следующий кадр"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg></button>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+(() => {
+  const stage = document.getElementById('stage');
+  const scenes = [...document.querySelectorAll('.scene')];
+  const N = scenes.length;
+  const $ = id => document.getElementById(id);
+  const flash = $('flash'), fill = $('fill'), hint = $('hint'), toast = $('toast'), count = $('count'), prevB = $('prev'), nextB = $('next');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+  const ease = u => u < .5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3)/2;
+  const ramp = (t,a,b) => clamp((t-a)/(b-a), 0, 1);
+  const DUR = { zoom:1300, doors:1500, slide:1100, rise:1200, gate:1400, flash:1500, wipe:1200, fade:1000, none:0 };
+
+  // wrap images in a camera rig; door scene gets two halves
+  scenes.forEach(s => {
+    const img = s.querySelector('img.ph');
+    const cam = document.createElement('div'); cam.className = 'cam';
+    img.replaceWith(cam); cam.appendChild(img);
+    if (s.dataset.fx === 'doors') ['l','r'].forEach(side => {
+      const h = document.createElement('div'); h.className = 'half ' + side; h.setAttribute('aria-hidden','true');
+      const c = img.cloneNode(); c.alt = ''; h.appendChild(c); cam.appendChild(h);
+    });
+    s._cam = cam; s._rest = 1;
+    if (s.querySelector('.card')) { const sw = document.createElement('div'); sw.className = 'sweep'; sw.setAttribute('aria-hidden','true'); cam.appendChild(sw); }
+    // headings reveal line by line
+    s.querySelectorAll('.copy h1, .copy h2').forEach(h => {
+      h.innerHTML = h.innerHTML.split(/<br\s*\/?>/i).map((part, n) => `<span class="ln"><span class="in" style="--d:${n*0.12}s">${part.trim()}</span></span>`).join('');
+    });
+  });
+
+  // numbers count up when a car stop arrives
+  const nums = el => { const m = el.textContent.match(/\d(?:[\d\s]*\d)?(?:,\d+)?/); return m ? m[0] : null; };
+  scenes.forEach(s => s.querySelectorAll('.price, .specs b').forEach(el => { const n = nums(el); if (n) { el._tpl = el.textContent; el._num = n; } }));
+  function countUp(s){
+    if (reduce.matches) return;
+    const els = [...s.querySelectorAll('.price, .specs b')].filter(e => e._num);
+    if (!els.length) return;
+    const t0 = performance.now() + 450, D = 1100;
+    const fmt = (v, src) => {
+      const dec = src.includes(',') ? src.split(',')[1].length : 0;
+      let str = v.toFixed(dec).replace('.', ',');
+      const [i, d] = str.split(',');
+      const grouped = /\s/.test(src) ? i.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : i;
+      return d ? grouped + ',' + d : grouped;
+    };
+    const step = now => {
+      const k = clamp((now - t0) / D, 0, 1), e = 1 - Math.pow(1 - k, 4);
+      els.forEach(el => { const target = parseFloat(el._num.replace(/\s/g,'').replace(',', '.')); el.textContent = el._tpl.replace(el._num, fmt(target * e, el._num)); });
+      if (k < 1 && s.classList.contains('active')) requestAnimationFrame(step); else els.forEach(el => el.textContent = el._tpl);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // light drizzle over the exterior shots
+  const rainC = document.createElement('canvas'), rctx = rainC.getContext('2d'), WET = [];
+  let drops = [], rainOn = false, rainRaf = 0;
+  function rainSize(){ const r = Math.min(devicePixelRatio || 1, 2); rainC.width = innerWidth * r; rainC.height = innerHeight * r; rctx.setTransform(r,0,0,r,0,0);
+    drops = Array.from({ length: Math.round(innerWidth * innerHeight / 9000) }, () => ({ x: Math.random()*innerWidth, y: Math.random()*innerHeight, l: 8 + Math.random()*18, v: 7 + Math.random()*8, a: .08 + Math.random()*.18 })); }
+  function rainLoop(){
+    rctx.clearRect(0, 0, innerWidth, innerHeight); rctx.lineWidth = 1;
+    drops.forEach(d => { rctx.strokeStyle = `rgba(200,220,245,${d.a})`; rctx.beginPath(); rctx.moveTo(d.x, d.y); rctx.lineTo(d.x - d.l*.18, d.y + d.l); rctx.stroke();
+      d.y += d.v; d.x -= d.v*.18; if (d.y > innerHeight) { d.y = -20; d.x = Math.random()*(innerWidth + 60); } });
+    rainRaf = rainOn ? requestAnimationFrame(rainLoop) : 0;
+  }
+  function setRain(on){ on = on && !reduce.matches; rainC.style.opacity = on ? 1 : 0; if (on && !rainOn) { rainOn = true; rainLoop(); } if (!on) { rainOn = false; } }
+  const streak = $('streak');
+
+  const chapters = [['Вход',1],['Приём',2],['Зал',3],['Сервис',7],['Финал',9],['Контакты',12]];
+  const chapBtns = chapters.map(([label, idx]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chap'; b.textContent = label;
+    b.style.left = (idx/(N-1)*100) + '%'; b.addEventListener('click', () => go(idx)); $('chaps').appendChild(b); return [b, idx];
+  });
+
+  let lockUntil = 0;
+  let cur = 0, busy = false, restStart = performance.now(), raf = 0, intro = true;
+
+  function cam(s, scale, tx = 0, ty = 0, blur = 0){ s._cam.style.transform = `translate3d(${tx}%,${ty}%,0) scale(${scale})`; s._cam.style.filter = ''; }
+  function hide(s){ s._cam.style.filter = ''; s.classList.remove('on','active','splitting'); s.style.opacity = 0; s.style.clipPath = ''; s.style.zIndex = ''; s.querySelectorAll('.half').forEach(h => h.style.transform = ''); }
+  function show(s, z){ s.classList.add('on'); s.style.opacity = 1; s.style.zIndex = z; s.style.clipPath = ''; }
+
+  // one transition frame from scene a to scene a+1 at progress u (0..1); also used in reverse
+  function render(a, b, u, fx, baseA){
+    const A = scenes[a], B = scenes[b];
+    flash.style.opacity = 0; streak.style.opacity = 0;
+    show(A, 1); show(B, 0); A.classList.remove('splitting');
+    const e = ease(u), mb = Math.sin(Math.PI * e);
+    switch (fx){
+      case 'doors':
+        A.classList.add('splitting');
+        A.querySelector('.half.l').style.transform = `translateX(${-52*e}%)`;
+        A.querySelector('.half.r').style.transform = `translateX(${52*e}%)`;
+        cam(A, baseA + .04*e); cam(B, 1);
+        break;
+      case 'slide':
+        A.style.opacity = 1 - e; cam(A, baseA, -14*e, 0, mb*5); cam(B, 1, 14*(1-e), 0, mb*5); B.style.opacity = e;
+        break;
+      case 'rise':
+        A.style.opacity = 1 - e; cam(A, baseA, 0, 8*e); cam(B, 1, 0, -6*(1-e)); B.style.opacity = e;
+        break;
+      case 'gate':
+        B.style.zIndex = 2; B.style.clipPath = `inset(${(1-e)*100}% 0 0 0)`; cam(A, baseA); cam(B, 1);
+        break;
+      case 'flash':
+        cam(A, baseA + .4*e, 0, 0, mb*6); flash.style.opacity = mb * .95;
+        streak.style.opacity = mb; streak.style.transform = `scaleX(${.2 + 1.3*mb})`;
+        A.style.opacity = 1 - ramp(e,.45,.6); B.style.opacity = ramp(e,.45,.6); cam(B, 1);
+        break;
+      case 'wipe':
+        B.style.zIndex = 2; B.style.clipPath = `inset(0 0 0 ${(1-e)*100}%)`; cam(A, baseA); cam(B, 1);
+        break;
+      case 'zoom':
+        A.style.opacity = 1 - e; cam(A, baseA + .28*e, 0, 0, mb*7); cam(B, 1, 0, 0, (1-e)*mb*5); B.style.opacity = e;
+        break;
+      default:
+        A.style.opacity = 1 - e; cam(A, baseA); cam(B, 1); B.style.opacity = e;
+    }
+  }
+
+  function settle(i){
+    scenes.forEach((s,k) => { if (k !== i) hide(s); });
+    flash.style.opacity = 0; streak.style.opacity = 0; stage.style.removeProperty('--bar');
+    const s = scenes[i]; show(s, 1); s.classList.remove('splitting'); if (!intro) s.classList.add('active'); cam(s, 1); s._rest = 1;
+    cur = i; restStart = performance.now(); busy = intro;
+    const hasCopy = !!s.querySelector('.copy'), isCard = !!s.querySelector('.card');
+    lockUntil = performance.now() + (reduce.matches ? 200 : isCard ? 1700 : hasCopy ? 1300 : 400);
+    chrome(); tick(); setRain(WET.includes(i)); if (!intro) countUp(s);
+    if (!intro && pending) flush();
+    // карточка «Концепт» открывается сама на последнем кадре
+    const end = !intro && i === N-1;
+    if (end !== atEnd) { atEnd = end; dispatchEvent(new CustomEvent('concept:final', { detail: end })); }
+  }
+  let atEnd = false;
+
+  function chrome(){
+    fill.style.width = (cur/(N-1)*100) + '%';
+    count.textContent = String(cur+1).padStart(2,'0') + ' / ' + N;
+    prevB.disabled = cur === 0; nextB.disabled = cur === N-1;
+    hint.hidden = cur !== 0; document.getElementById('path').style.opacity = cur === 0 ? 0 : 1;
+    chapBtns.forEach(([b, idx], n) => { const nx = chapBtns[n+1] ? chapBtns[n+1][1] : N; b.classList.toggle('on', cur >= idx && cur < nx); });
+  }
+
+  // slow resting dolly on the current shot
+  function tick(){
+    if (raf) cancelAnimationFrame(raf);
+    const s = scenes[cur], amp = parseFloat(s.dataset.amp) || 0;
+    if (reduce.matches || !amp) return;
+    const loop = now => {
+      if (busy) return;
+      const k = clamp((now - restStart) / 9000, 0, 1);
+      s._rest = 1 + amp * (1 - Math.pow(1 - k, 3));
+      cam(s, s._rest);
+      if (k < 1) raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+  }
+
+  function go(target){
+    target = clamp(target, 0, N-1);
+    if (busy && clipSkip && target > cur) { clipSkip(); return; }
+    if (!busy && performance.now() < lockUntil) return;
+    if (busy || target === cur) return;
+    if (!reduce.matches && !skipClip && target === cur + 1 && scenes[cur].dataset.clip) return playClip(cur, target);
+    busy = true; if (raf) cancelAnimationFrame(raf);
+    const from = cur, A = scenes[from];
+    A.classList.remove('active');
+    let a, b, fx, forward;
+    if (Math.abs(target - from) === 1){
+      forward = target > from;
+      a = forward ? from : target; b = a + 1; fx = forward ? scenes[a].dataset.fx : 'fade';
+    } else { a = from; b = target; fx = 'fade'; forward = true; }
+    if (reduce.matches) fx = 'fade';
+    const base = forward ? A._rest : 1;
+    const dur = reduce.matches ? 350 : (DUR[fx] || 1000);
+    scenes.forEach((s,k) => { if (k !== a && k !== b) hide(s); });
+    const t0 = performance.now();
+    if (!WET.includes(target)) setRain(false);
+    const bars = false;
+    const step = now => {
+      const p = clamp((now - t0) / dur, 0, 1);
+      if (bars) stage.style.setProperty('--bar', (Math.sin(Math.PI * p) * 7).toFixed(2) + 'vh');
+      if (forward) render(a, b, p, fx, base); else render(a, b, 1 - p, fx, 1);
+      if (p < 1) requestAnimationFrame(step); else settle(target);
+    };
+    requestAnimationFrame(step);
+  }
+  // real camera move: one preloaded <video> per clip; never block the page if a clip is not ready or stalls
+  let skipClip = false, clipSkip = null;
+  const clips = {};
+  // слабая сеть или режим экономии трафика — видео не грузим, остаются обычные переходы
+  const net = navigator.connection;
+  const lite = !!net && (net.saveData || /(^|-)2g$/.test(net.effectiveType || ''));
+  const clipList = [];
+  if (!lite) scenes.forEach(s => { const src = s.dataset.clip; if (!src) return;
+    const v = document.createElement('video'); v.className = 'clip'; v.muted = true; v.playsInline = true; v.setAttribute('playsinline',''); v.setAttribute('aria-hidden','true'); v.preload = 'none';
+    stage.insertBefore(v, flash); clips[src] = v; clipList.push([v, src]); });
+
+  // Загрузка по очереди, в порядке показа, чтобы шаги не делили канал:
+  // первый кадр (в разметке) → картинки кадров 2–3 → первый клип → остальные картинки → второй и третий клипы.
+  const within = (ms, fn) => new Promise(res => { const t = setTimeout(res, ms); fn(() => { clearTimeout(t); res(); }); });
+  const loadImgs = list => within(12000, done => {
+    const imgs = list.flatMap(s => [...s.querySelectorAll('img[data-src]')]);
+    let left = imgs.length; if (!left) return done();
+    imgs.forEach(im => { im.addEventListener('load', () => { im.decode?.().catch(() => {}); if (--left === 0) done(); }, { once: true });
+      im.addEventListener('error', () => { if (--left === 0) done(); }, { once: true });
+      im.src = im.dataset.src; im.removeAttribute('data-src'); });
+  });
+  // Скорость сети (Мбит/с): лучшая скорость скачивания среди последних крупных картинок и сегментов —
+  // файлы качаются параллельно и делят канал, поэтому средняя или медиана занижают скорость.
+  const speed = () => {
+    const rs = performance.getEntriesByType('resource').filter(e => /\.(jpg|m4s|mp4)(\?|$)/.test(e.name) && e.transferSize > 100000 && e.responseEnd > e.responseStart)
+      .slice(-8).map(e => e.transferSize * 8 / (e.responseEnd - e.responseStart) / 1000);
+    return rs.length ? Math.max(...rs) : 0;
+  };
+  // Качество важнее: всегда 2K, 1080p — только на явно медленной сети. Ниже 1080p не опускаемся:
+  // если клип не успел докачаться, будет обычная смена кадра.
+  const hlsLevel = () => { const mbps = speed(); return mbps && mbps < 5 ? '1080' : '2k'; };
+  const loadClip = ([v, src]) => within(15000, done => {
+    v.addEventListener('canplaythrough', done, { once: true });
+    v.addEventListener('error', done, { once: true });
+    // HLS (v/cN/<уровень>/index.m3u8) — где браузер играет его сам (iPhone, Android); остальные берут исходный MP4 в 2K.
+    // Уровень выбираем сами по скорости сети: встроенный выбор на 5-секундном клипе не успевает разогнаться.
+    const hls = v.canPlayType('application/vnd.apple.mpegurl') ? src.replace(/\.mp4$/, '/' + hlsLevel() + '/index.m3u8') : '';
+    v.preload = 'auto'; v.src = hls || src;
+    // Safari на iPhone при preload="auto" часто берёт только заголовок файла; короткий беззвучный запуск заставляет его буферизовать
+    const p = v.play(); if (p && p.then) p.then(() => { if (!v._playing) { v.pause(); try { v.currentTime = 0; } catch(e){} } }, () => {});
+  });
+  let loading = false;
+  async function loadAll(){
+    if (loading) return; loading = true;
+    await loadImgs(scenes.slice(1, 3));
+    if (clipList[0]) await loadClip(clipList[0]);
+    await loadImgs(scenes.slice(3));
+    for (const c of clipList.slice(1)) await loadClip(c);
+  }
+  function prepClip(){}
+  // Картинка кадра загружена и готова к показу (с запасом по времени, чтобы не держать переход вечно).
+  function imgReady(s, ms){
+    const im = s.querySelector('img.ph'); if (!im) return Promise.resolve();
+    if (im.dataset.src) { im.src = im.dataset.src; im.removeAttribute('data-src'); }
+    const loaded = im.complete && im.naturalWidth ? Promise.resolve() : new Promise(r => { im.addEventListener('load', r, { once: true }); im.addEventListener('error', r, { once: true }); });
+    return Promise.race([loaded.then(() => im.decode ? im.decode().catch(() => {}) : 0), new Promise(r => setTimeout(r, ms))]);
+  }
+  function playClip(from, to){
+    const v = clips[scenes[from].dataset.clip];
+    // играем, только если клип скачан целиком: клипы в 2K (~10 Мбит/с), и на мобильной сети недокачанный хвост подвисает; иначе — обычный переход без рывков
+    const got = v && v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0;
+    if (!v || v.readyState < 4 || !v.duration || got < v.duration - .2) { skipClip = true; go(to); skipClip = false; return; }
+    busy = true; v._playing = true; if (raf) cancelAnimationFrame(raf);
+    const A = scenes[from]; A.classList.remove('active');
+    // Бесшовный стык: картинка следующего кадра грузится, пока идёт проезд; видео держит последний кадр, пока она не готова, и только потом растворяется в неё.
+    const next = imgReady(scenes[to], 4000);
+    let done = false, started = false, lastT = -1, lastMove = performance.now(), loop = 0;
+    const cleanup = () => { clipSkip = null; v.onended = null; v.onerror = null; clearInterval(dog); cancelAnimationFrame(loop); };
+    const finish = ok => {
+      if (done) return; done = true; v._playing = false; cleanup();
+      if (!ok) { v.pause(); v.classList.remove('on'); busy = false; skipClip = true; go(to); skipClip = false; return; }
+      v.pause();
+      next.then(() => {
+        settle(to);
+        // кадр под видео уже нарисован — теперь видео плавно уходит
+        requestAnimationFrame(() => requestAnimationFrame(() => v.classList.remove('on')));
+        setTimeout(() => { try { v.currentTime = 0; } catch(e){} }, 700);
+      });
+    };
+    // Видео появляется, только когда первый кадр действительно на экране — иначе на телефоне мелькает чёрная подложка.
+    const reveal = () => { if (started || done) return; started = true; v.classList.add('on'); setTimeout(() => { if (!done) scenes.forEach((s,k) => { if (k !== from) hide(s); }); }, 300); };
+    if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(() => requestAnimationFrame(reveal));
+    // Конец ловим покадрово и останавливаемся за полкадра-кадр до конца: у встроенного HLS после конца бывает пустой кадр.
+    const watch = () => {
+      if (done) return;
+      if (!v.requestVideoFrameCallback && !started && v.currentTime > 0.04) reveal();
+      if (v.duration && v.currentTime >= v.duration - .09) return finish(true);
+      loop = requestAnimationFrame(watch);
+    };
+    loop = requestAnimationFrame(watch);
+    v.onended = () => finish(true);
+    v.onerror = () => finish(started);
+    // watchdog: if playback does not start in 1.2 s or freezes for 1.2 s, move on
+    const dog = setInterval(() => {
+      const now = performance.now();
+      if (v.currentTime !== lastT) { lastT = v.currentTime; lastMove = now; }
+      if (now - lastMove > 1200) finish(started);
+    }, 200);
+    clipSkip = () => finish(true);
+    try { v.currentTime = 0; } catch(e){}
+    const p = v.play(); if (p && p.catch) p.catch(() => finish(false));
+  }
+
+
+  // Жест во время перехода или сразу после прихода на кадр не теряется: шаги копятся и
+  // выполняются, как только кадр освободится; несколько шагов — сразу переход на нужный кадр.
+  let pending = 0, flushT = 0;
+  function flush(){
+    clearTimeout(flushT);
+    const d = pending; pending = 0;
+    if (!d || busy) return;
+    lockUntil = 0;
+    go(clamp(cur + d, 0, N-1));
+  }
+  function stepBy(d){
+    // Свайп во время проезда — проезд пропускается, и шаг всё равно засчитывается.
+    if (busy && clipSkip && d > 0) { pending = clamp(pending + d, -cur, N-1-cur); clipSkip(); return; }
+    const locked = !busy && performance.now() < lockUntil;
+    if (!busy && !locked) { go(cur + d); return; }
+    pending = clamp(pending + d, -cur, N-1-cur);
+    if (locked) { clearTimeout(flushT); flushT = setTimeout(flush, lockUntil - performance.now() + 16); }
+  }
+  const next = () => stepBy(1), prev = () => stepBy(-1);
+
+  // input: one gesture = one shot
+  let wheelLock = 0, lastWheel = 0;
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    const now = performance.now(), gap = now - lastWheel;
+    lastWheel = now;
+    if (Math.abs(e.deltaY) < 8) return;
+    // Во время перехода — только новый жест (после паузы), не хвост инерции трекпада.
+    if (busy) { if (gap > 250) { wheelLock = now + 700; e.deltaY > 0 ? next() : prev(); } return; }
+    if (now < wheelLock) return;
+    wheelLock = now + 700;
+    e.deltaY > 0 ? next() : prev();
+  }, { passive: false });
+  let ty = null, tx = null;
+  stage.addEventListener('touchstart', e => { ty = e.touches[0].clientY; tx = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+  stage.addEventListener('touchend', e => {
+    if (ty === null) return;
+    const dy = e.changedTouches[0].clientY - ty, dx = e.changedTouches[0].clientX - tx; ty = null;
+    if (Math.max(Math.abs(dy), Math.abs(dx)) < 40) return;
+    const d = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
+    d < 0 ? next() : prev();
+  });
+  addEventListener('keydown', e => {
+    if (cardOpen()) return;
+    if (['ArrowDown','PageDown',' ','ArrowRight'].includes(e.key)) { e.preventDefault(); next(); }
+    if (['ArrowUp','PageUp','ArrowLeft'].includes(e.key)) { e.preventDefault(); prev(); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(N-1);
+  });
+  hint.addEventListener('click', next); nextB.addEventListener('click', next); prevB.addEventListener('click', prev);
+
+  // кнопки записи, связи и расчётов открывают карточку «Концепт» (concept-card.js)
+  // пока карточка открыта, клавиши не листают кадры
+  const cardOpen = () => !!document.querySelector('concept-card')?.shadowRoot?.querySelector('.veil.on');
+
+  // opening: letterbox opens, the showroom lights come on, then the title
+  rainSize(); addEventListener('resize', rainSize);
+  settle(0);
+  const first = scenes[0].querySelector('img.ph');
+  let opened = false;
+  const begin = () => {
+    if (!intro || opened) return; opened = true;
+    if (reduce.matches) { stage.classList.remove('pre'); intro = false; settle(0); loadAll(); return; }
+    // Фото не успело к старту (медленная сеть): без шторок и «включения света» — кадр сразу,
+    // сначала его размытая копия, фото проявляется поверх. Чёрного экрана нет.
+    if (!(first.complete && first.naturalWidth)) {
+      stage.classList.remove('pre'); intro = false; settle(0);
+      first.addEventListener('load', loadAll, { once: true }); setTimeout(loadAll, 2500);
+      return;
+    }
+    stage.classList.add('opening'); stage.classList.remove('pre');
+    // заголовок выезжает, пока раскрываются шторки, — не ждёт «включения света»: это самый крупный текст первого экрана (по нему считается LCP)
+    setTimeout(() => scenes[0].classList.add('active'), 200);
+    // остальные кадры и проезды — когда заголовок выехал целиком (LCP засчитывается по окончании выезда): до этого канал только у первого экрана
+    const lines = scenes[0].querySelectorAll('.ln .in'), lastLine = lines[lines.length - 1];
+    if (lastLine) lastLine.addEventListener('transitionend', loadAll, { once: true });
+    setTimeout(loadAll, 2500);
+    setTimeout(() => { intro = false; settle(0); }, 2100);
+    setTimeout(() => stage.classList.remove('opening'), 4200);
+  };
+  // старт — как только фото загружено, но не позже 0,4 с: первые ~0,9 с кадр затемнён до 16%, и на медленной сети фото успевает
+  // проявиться до «включения света»; заголовок (по нему считается LCP) не ждёт фото. decode() не ждём: в части окружений
+  // он не завершается до первой отрисовки.
+  if (first.complete && first.naturalWidth) begin(); else { first.addEventListener('load', begin, { once: true }); first.addEventListener('error', begin, { once: true }); }
+  setTimeout(begin, 400);
+})();
+</script>
+<script src="concept-card.js?v=d0dbf4ab" defer data-category="дилерская компания" data-text="Это не сайт реального автосалона. Мы сделали его, чтобы показать, как проявить то, что у бизнеса уже есть. Марка Vela, модели, цены, условия и адрес придуманы. Сходство с реальными автомобилями случайно." data-tone="dark" data-position="tr" data-order="[data-book]" data-contact='[data-note*="чат"]' data-plain='[data-note]:not([data-note*="чат"])'></script>
+</body>
+</html>
